@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WEA TODO</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="style.css") }}"/>
+    <link rel="shortcut icon" href="{{ url_for("static", filename="favicon.ico") }}">
+</head>
+
+<body>
+
+<h1>&emsp;WEA TODO</h1>
+<header>
+    <nav>
+        <ul>
+            <li class="{{ "active" if request.path == "/" else "" }}">
+                <a href="{{ url_for("main.index") }}">Vítejte</a>
+            </li>
+            {% if current_user.is_authenticated %}
+                <li class="{{ "active" if request.path == "/profile" else "" }}">
+                    <a href="{{ url_for("main.profile") }}">Moje poznámky</a>
+                </li>
+            {% endif %}
+            {% if not current_user.is_authenticated %}
+                <li class="{{ "active" if request.path == "/login" else "" }}">
+                    <a href="{{ url_for("auth.login") }}">Přihlásit se</a>
+                </li>
+                <li class="{{ "active" if request.path == "/signup" else "" }}">
+                    <a href="{{ url_for("auth.signup") }}">Registrace</a>
+                </li>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+                <li>
+                    <a href="{{ url_for("auth.logout") }}">Odhlásit se</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="warning">
+            {{ messages[0] }}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+
+</html>

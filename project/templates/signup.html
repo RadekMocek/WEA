@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form method="POST" action="/signup">
+        <fieldset>
+            <legend>Registrace</legend>
+            <label>
+                Nickname:<br>
+                <input type="text" name="nickname">
+            </label>
+            <br><br>
+            <label>
+                Heslo:<br>
+                <input type="password" name="password">
+            </label>
+            <br><br>
+            <label>
+                Heslo znovu:<br>
+                <input type="password" name="password_check">
+            </label>
+            <br><br>
+            <button>Registrovat se</button>
+        </fieldset>
+    </form>
+{% endblock %}

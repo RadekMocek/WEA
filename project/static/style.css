@@ -1,0 +1,70 @@
+:root {
+    --color-navbar-bg: #5948ad;
+    --color-navbar-active: #e6e6ef;
+    --color-navbar-hover: #000000;
+    --size-navbar-height: 1.5rem;
+
+    --color-warning: #c19141;
+
+    --color-body-background: #f7f7f7;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: auto;
+    background-color: var(--color-body-background);
+    font-size: 1.05rem;
+}
+
+header {
+    display: flex;
+    position: sticky;
+    top: 0;
+    border-top: 2px solid var(--color-navbar-hover);
+    background-color: var(--color-navbar-bg);
+    z-index: 1;
+}
+
+nav {
+    width: 100%;
+    font-size: 0;
+}
+nav ul {
+    width: 300px;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0 0 0 169px;
+}
+nav li {
+    text-align: center;
+    flex-grow: 1;
+}
+nav li.active {
+    background-color: var(--color-navbar-active);
+}
+nav li:hover:not(.active) {
+    background-color: var(--color-navbar-hover);
+}
+nav a {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    line-height: var(--size-navbar-height);
+}
+nav li.active a {
+    color: black;
+}
+
+.warning {
+    background-color: var(--color-warning);
+    color: white;
+    padding: 1rem;
+}
+
+main {
+    width: 65%;
+    margin: 2rem auto 0 auto;
+}
