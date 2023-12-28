@@ -22,7 +22,7 @@ def login_post():
     remember = True if request.form.get("remember") else False
 
     # Existuje uživatel a shodují se hashe hesel ?
-    user: Optional[User] = db.session.execute(db.select(User).filter_by(nickname=nickname)).first()
+    user: Optional[User] = db.session.execute(db.select(User).filter_by(nickname=nickname)).first()[0]
     if not user or not check_password_hash(user.password, password):
         flash("Neplatné uživatelské jméno nebo heslo.")
         return redirect(url_for("auth.login"))
