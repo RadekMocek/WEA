@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import json
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
@@ -17,7 +17,8 @@ def index():
 @main.route("/profile")
 @login_required
 def profile():
-    user_tasks = db.session.execute(db.select(Task).filter_by(user_id=current_user.id)).scalars()
+    user_tasks_query = db.session.execute(db.select(Task).filter_by(user_id=current_user.id)).all()
+    user_tasks = [row[0] for row in user_tasks_query]
     return render_template("profile.html", nickname=current_user.nickname, user_tasks=user_tasks)
 
 

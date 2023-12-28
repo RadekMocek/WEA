@@ -24,7 +24,8 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        return db.session.execute(db.select(User).filter_by(id=int(user_id))).scalar_one()
+        # return db.session.execute(db.select(User).filter_by(id=int(user_id))).one_or_none()  # ¯\_(ツ)_/¯
+        return User.query.get(int(user_id))
 
     # Blueprints
     from .auth import auth as auth_blueprint
