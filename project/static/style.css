@@ -68,3 +68,10 @@ main {
     width: 65%;
     margin: 2rem auto 0 auto;
 }
+
+.add_task textarea {
+    resize: none;
+}
+.add_task button {
+    width: 525px;
+}

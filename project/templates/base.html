@@ -20,7 +20,7 @@
             </li>
             {% if current_user.is_authenticated %}
                 <li class="{{ "active" if request.path == "/profile" else "" }}">
-                    <a href="{{ url_for("main.profile") }}">Moje poznámky</a>
+                    <a href="{{ url_for("main.profile") }}">Moje úkoly</a>
                 </li>
             {% endif %}
             {% if not current_user.is_authenticated %}
@@ -52,6 +52,9 @@
     {% block content %}
     {% endblock %}
 </main>
+
+{% block javascript %}
+{% endblock %}
 
 </body>
 

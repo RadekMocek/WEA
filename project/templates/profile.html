@@ -1,5 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Poznámky uživatele <var>{{ nickname }}</var>:</h1>
+    <h1>Úkoly uživatele <var>{{ nickname }}</var>:</h1>
+
+    <form class="add_task" method="POST" action="/add_task">
+        <fieldset>
+            <legend>Přidat úkol</legend>
+            <label>
+                <textarea name="new_task_content" rows="2" cols="70"
+                          id="new_task_content" onkeyup="checkInputLength();"></textarea>
+            </label>
+            <br>
+            <button id="submit_button" disabled>Přidat</button>
+        </fieldset>
+    </form>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        const newTaskContent = document.getElementById("new_task_content");
+        const submitButton = document.getElementById("submit_button");
+
+        const checkInputLength = () => {
+            submitButton.disabled = newTaskContent.value === "";
+        };
+    </script>
 {% endblock %}

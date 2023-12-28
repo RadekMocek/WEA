@@ -42,15 +42,21 @@ def signup_post():
     password = request.form.get("password")
     password_check = request.form.get("password_check")
 
+    # Shodují se dvě zadaná hesla ?
+    if password != password_check:
+        flash("Zadaná hesla se neshodují.")
+        return redirect(url_for("auth.signup"))
+
+    # Má heslo dostatečnou délku ?
+    min_len = 8
+    if len(password) < min_len:
+        flash(f"Heslo musí mít alsepoň {min_len} znaků.")
+        return redirect(url_for("auth.signup"))
+
     # Neexistuje už uživatel s takovýmto nickname ?
     user = User.query.filter_by(nickname=nickname).first()
     if user:
         flash("Toto uživatelské jméno není dostupné.")
-        return redirect(url_for("auth.signup"))
-
-    # Shodují se dvě zadaná hesla ?
-    if password != password_check:
-        flash("Zadaná hesla se neshodují.")
         return redirect(url_for("auth.signup"))
 
     # Přidat uživatele do databáze
