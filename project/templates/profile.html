@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Úkoly uživatele <var>{{ nickname }}</var>:</h1>
-
     <form class="add_task" method="POST" action="/add_task">
         <fieldset>
-            <legend>Přidat úkol</legend>
+            <legend>Přidat úkol – uživatel {{ nickname }}</legend>
             <label>
                 <textarea name="new_task_content" rows="2" cols="70"
                           id="new_task_content" onkeyup="checkInputLength();"></textarea>
@@ -18,11 +16,17 @@
 
 {% block javascript %}
     <script>
-        const newTaskContent = document.getElementById("new_task_content");
-        const submitButton = document.getElementById("submit_button");
+        let user_tasks, newTaskContent, submitButton;
 
+        document.addEventListener("DOMContentLoaded", () => {
+            newTaskContent = document.getElementById("new_task_content");
+            submitButton = document.getElementById("submit_button");
+        });
+
+        // Enable/disable tlačítka pro přidání nového úkolu
         const checkInputLength = () => {
             submitButton.disabled = newTaskContent.value === "";
         };
+
     </script>
 {% endblock %}

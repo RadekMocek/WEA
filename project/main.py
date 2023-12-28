@@ -17,7 +17,8 @@ def index():
 @main.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html", nickname=current_user.nickname)
+    user_tasks = db.session.execute(db.select(Task).filter_by(user_id=current_user.id)).scalars()
+    return render_template("profile.html", nickname=current_user.nickname, user_tasks=user_tasks)
 
 
 @main.route("/add_task", methods=["POST"])

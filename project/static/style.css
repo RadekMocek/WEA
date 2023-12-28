@@ -7,6 +7,9 @@
     --color-warning: #c19141;
 
     --color-body-background: #f7f7f7;
+
+    --color-fielset-border-top: #747476;
+    --color-fielset-border-side: #e6e5e5;
 }
 
 body {
@@ -67,6 +70,20 @@ nav li.active a {
 main {
     width: 65%;
     margin: 2rem auto 0 auto;
+}
+
+fieldset {
+    border-top: 18px solid var(--color-fielset-border-top);
+    border-right: 1px solid var(--color-fielset-border-side);
+    border-left: 1px solid var(--color-fielset-border-side);
+    border-bottom: 1px solid var(--color-fielset-border-side);
+}
+fieldset legend {
+    padding: 0;
+    height: 18px;
+    font-size: 14px;
+    color: white;
+    background-color: var(--color-fielset-border-top);
 }
 
 .add_task textarea {
