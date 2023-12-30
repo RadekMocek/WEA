@@ -16,3 +16,7 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime)
     done = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    @property
+    def as_dict(self):
+        return {col.name: getattr(self, col.name) for col in self.__table__.columns}

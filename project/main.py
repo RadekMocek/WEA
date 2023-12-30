@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from . import db
@@ -14,12 +14,22 @@ def index():
     return render_template("index.html")
 
 
+@main.route("/get_tasks_json")
+def get_tasks_json():
+    tasks: list[Task] = Task.query.all()
+    return jsonify([task.as_dict for task in tasks])
+
+
 @main.route("/profile")
 @login_required
 def profile():
-    user_tasks_query = db.session.execute(db.select(Task).filter_by(user_id=current_user.id)).all()
-    user_tasks = [row[0] for row in user_tasks_query]
-    return render_template("profile.html", nickname=current_user.nickname, user_tasks=user_tasks)
+    # user_tasks_query = db.session.execute(db.select(Task).filter_by(user_id=current_user.id)).all()
+    user_tasks_query: list[Task] = (Task.query
+                                    .filter_by(user_id=current_user.id)
+                                    .order_by(Task.created_at.desc())
+                                    .all())
+    user_tasks = [task.as_dict for task in user_tasks_query]
+    return render_template("profile.html", user_tasks=user_tasks)
 
 
 @main.route("/add_task", methods=["POST"])

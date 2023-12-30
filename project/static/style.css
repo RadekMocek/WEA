@@ -10,6 +10,9 @@
 
     --color-fielset-border-top: #747476;
     --color-fielset-border-side: #e6e5e5;
+
+    --color-thead-font: #494949;
+    --color-tr-hover: #f2f2f2;
 }
 
 body {
@@ -17,6 +20,11 @@ body {
     margin: auto;
     background-color: var(--color-body-background);
     font-size: 1.05rem;
+}
+
+.logo {
+    height: 50px;
+    padding: 1rem;
 }
 
 header {
@@ -91,4 +99,23 @@ fieldset legend {
 }
 .add_task button {
     width: 525px;
+}
+
+#tasks_table {
+    border-collapse: collapse;
+    width: 100%;
+}
+#tasks_table td, #tasks_table th {
+    border: 1px solid var(--color-fielset-border-side);
+    padding: 8px;
+}
+#tasks_table tr:hover{
+    background-color: var(--color-tr-hover);
+}
+#tasks_table th {
+    padding: 3px 8px;
+    text-align: left;
+    background: rgb(231,231,231);
+    background: linear-gradient(0deg, rgba(231,231,231,1) 0%, rgba(217,217,217,1) 50%, rgba(231,231,231,1) 100%);
+    color: var(--color-thead-font);
 }
