@@ -30,7 +30,7 @@
                     <td>
                         <button>Hotovo</button>
 
-                        <button>Upravit</button>
+                        <button onclick="openModal({{ task.id }}, '{{ task.content }}');">Upravit</button>
 
                         <button>Smazat</button>
                     </td>
@@ -39,6 +39,23 @@
             </tbody>
         </table>
     </fieldset>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal_content">
+            <div class="modal_header">
+                <span>Upravit úkol</span>
+                <span class="modal_close">&times;</span>
+            </div>
+            <form class="add_task" id="modal_form" method="POST" action="/edit_task">
+                <label>
+                    <textarea name="edited_task_content" rows="2" cols="70"
+                              id="modal_form_content" onkeyup="checkInputLength();"></textarea>
+                </label>
+                <button id="modal_submit_button" disabled>Upravit</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
@@ -46,15 +63,41 @@
         "use strict";
 
         let newTaskContent, submitButton;
+        let modal, modalSpan, modalForm, modalFormContent, modalSubmitButton;
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Přidání nového úkolu
             newTaskContent = document.getElementById("new_task_content");
             submitButton = document.getElementById("submit_button");
+
+            // Modal – Editace úkolu (https://www.w3schools.com/howto/howto_css_modals.asp)
+            modal = document.getElementById("modal"); // Get the modal
+            modalSpan = document.getElementsByClassName("modal_close")[0]; // Get the <span> element that closes the modal
+            modalForm = document.getElementById("modal_form");
+            modalFormContent = document.getElementById("modal_form_content");
+            modalSubmitButton = document.getElementById("modal_submit_button");
+            modalSpan.onclick = () => { // When the user clicks on <span> (x), close the modal
+                modal.style.display = "none";
+            };
+            window.onclick = (event) => { // When the user clicks anywhere outside of the modal, close it
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
         });
 
-        // Enable/disable tlačítka pro přidání nového úkolu
+        // Enable/disable tlačítka pro přidání/editaci úkolu
         const checkInputLength = () => {
             submitButton.disabled = newTaskContent.value === "";
+            modalSubmitButton.disabled = modalFormContent.value === "";
+        };
+
+        // Zobrazit modal pro editaci úkolu; nastavit odpovídající akci pro formulář; předvyplnit textarea
+        const openModal = (taskId, taskContent) => {
+            modal.style.display = "block";
+            modalForm.action = `/edit_task/${taskId}`;
+            modalFormContent.value = taskContent;
+            modalSubmitButton.disabled = false;
         };
     </script>
 {% endblock %}
