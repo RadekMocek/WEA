@@ -10,6 +10,7 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "secretbruh"  # TODO
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
+    app.jinja_options["autoescape"] = lambda _: True
 
     # Databáze
     db.init_app(app)

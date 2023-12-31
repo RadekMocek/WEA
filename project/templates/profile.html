@@ -7,7 +7,7 @@
             <label>
                 <input name="new_task_content" size="69" id="new_task_content" onkeyup="checkInputLength();">
             </label>
-            <button id="submit_button" disabled>Přidat</button>
+            <button type="submit" id="submit_button" disabled>Přidat</button>
         </fieldset>
     </form>
     <fieldset>
@@ -24,17 +24,27 @@
             {% for task in user_tasks %}
                 <tr>
                     <td>{{ task.content }}</td>
-                    <td>{{ task.done }}</td>
                     <td>
-                        <button>Hotovo</button>
-
-                        <button onclick="openModal({{ task.id }}, 'edit', '{{ task.content }}');">Upravit</button>
-                        <button onclick="openModal({{ task.id }}, 'delete', '{{ task.content }}');">Smazat</button>
+                        {% if task.done %}
+                            <img class="check" src="{{ url_for("static", filename="check.png") }}"
+                                 alt="Indikátor splněného úkolu">
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form class="complete_task_form" method="POST" action="/complete_task/{{ task.id }}">
+                            <button type="submit">Hotovo</button>
+                        </form>
+                        <button onclick="openModal({{ task.id }}, 'edit');">Upravit</button>
+                        <button onclick="openModal({{ task.id }}, 'delete');">Smazat</button>
                     </td>
                 </tr>
             {% endfor %}
             {% if not user_tasks %}
-                <tr><td colspan="3">Žádné úkoly k zobrazení.</td></tr>
+                <tr>
+                    <td colspan="3">Žádné úkoly k zobrazení.</td>
+                </tr>
             {% endif %}
             </tbody>
         </table>
@@ -52,7 +62,7 @@
                     <input name="edited_task_content" size="69" id="modal_form_content" onkeyup="checkInputLength();">
                 </label>
                 <br><br>
-                <button id="modal_submit_button" disabled>Upravit</button>
+                <button type="submit" id="modal_submit_button" disabled>Upravit</button>
             </form>
         </div>
     </div>
@@ -62,13 +72,16 @@
     <script>
         "use strict";
 
-        let newTaskContent, submitButton;
+        let newTaskContent, submitButton, userTasks;
         let modal, modalSpan, modalForm, modalFormContent, modalSubmitButton, modalHeaderText;
 
         document.addEventListener("DOMContentLoaded", () => {
             // Přidání nového úkolu
             newTaskContent = document.getElementById("new_task_content");
             submitButton = document.getElementById("submit_button");
+
+            // Pro předvyplnění inputu při editaci, dosazovat user content do onclick="" není ideální
+            userTasks = {{ user_tasks|tojson }};
 
             // Modal – Editace úkolu (https://www.w3schools.com/howto/howto_css_modals.asp)
             modal = document.getElementById("modal"); // Get the modal
@@ -93,12 +106,14 @@
             modalSubmitButton.disabled = modalFormContent.value === "";
         };
 
-        // Zobrazit modal pro editaci úkolu; nastavit odpovídající akci pro formulář; předvyplnit textarea
-        const openModal = (taskId, action, taskContent) => {
+        // Zobrazit modal pro editaci úkolu; nastavit odpovídající akci pro formulář; předvyplnit input
+        const openModal = (taskId, action) => {
             modal.style.display = "block";
             modalForm.action = `/${action}_task/${taskId}`;
-            modalFormContent.value = taskContent;
             modalSubmitButton.disabled = false;
+
+            let task = userTasks.find(x => x.id === taskId);
+            modalFormContent.value = task.content;
 
             if (action === "edit") {
                 modalHeaderText.textContent = "Upravit úkol";

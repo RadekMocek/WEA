@@ -1,7 +1,7 @@
 from typing import Optional
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
@@ -12,6 +12,9 @@ auth = Blueprint("auth", __name__)
 
 @auth.route("/login")
 def login():
+    if current_user.is_authenticated:
+        flash("Již jste přihlášen/a.")
+        return redirect(url_for('main.index'))
     return render_template("login.html")
 
 
@@ -34,6 +37,9 @@ def login_post():
 
 @auth.route("/signup")
 def signup():
+    if current_user.is_authenticated:
+        flash("Již jste přihlášen/a.")
+        return redirect(url_for('main.index'))
     return render_template("signup.html")
 
 

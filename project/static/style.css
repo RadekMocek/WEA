@@ -115,6 +115,15 @@ fieldset legend {
     color: var(--color-thead-font);
 }
 
+.check {
+    height: 21px;
+    vertical-align: top;
+}
+
+.complete_task_form {
+    display: inline;
+}
+
 /* == MODAL == */
 /* https://www.w3schools.com/howto/howto_css_modals.asp */
 /* The Modal (background) */
