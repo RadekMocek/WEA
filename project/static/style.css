@@ -96,13 +96,6 @@ fieldset legend {
     background-color: var(--color-fielset-border-top);
 }
 
-.add_task textarea {
-    resize: none;
-}
-.add_task button {
-    width: 525px;
-}
-
 #tasks_table {
     border-collapse: collapse;
     width: 100%;

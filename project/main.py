@@ -63,3 +63,16 @@ def edit_task(task_id):
     task.content = edited_task_content
     db.session.commit()
     return redirect(url_for("main.profile"))
+
+
+@main.route("/delete_task/<task_id>", methods=["POST"])
+@login_required
+def delete_task(task_id):
+    task: Optional[Task] = Task.query.filter_by(id=task_id).first()
+    if not task or task.user_id != current_user.id:
+        flash("Úkol se nepodařilo smazat.")
+        return redirect(url_for("main.profile"))
+
+    db.session.delete(task)
+    db.session.commit()
+    return redirect(url_for("main.profile"))

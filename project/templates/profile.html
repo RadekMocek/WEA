@@ -1,14 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form class="add_task" method="POST" action="/add_task">
+    <form method="POST" action="/add_task">
         <fieldset>
             <legend>Přidat úkol</legend>
             <label>
-                <textarea name="new_task_content" rows="2" cols="70"
-                          id="new_task_content" onkeyup="checkInputLength();"></textarea>
+                <input name="new_task_content" size="69" id="new_task_content" onkeyup="checkInputLength();">
             </label>
-            <br>
             <button id="submit_button" disabled>Přidat</button>
         </fieldset>
     </form>
@@ -30,12 +28,14 @@
                     <td>
                         <button>Hotovo</button>
 
-                        <button onclick="openModal({{ task.id }}, '{{ task.content }}');">Upravit</button>
-
-                        <button>Smazat</button>
+                        <button onclick="openModal({{ task.id }}, 'edit', '{{ task.content }}');">Upravit</button>
+                        <button onclick="openModal({{ task.id }}, 'delete', '{{ task.content }}');">Smazat</button>
                     </td>
                 </tr>
             {% endfor %}
+            {% if not user_tasks %}
+                <tr><td colspan="3">Žádné úkoly k zobrazení.</td></tr>
+            {% endif %}
             </tbody>
         </table>
     </fieldset>
@@ -44,14 +44,14 @@
     <div id="modal" class="modal">
         <div class="modal_content">
             <div class="modal_header">
-                <span>Upravit úkol</span>
+                <span id="modal_header_text">Upravit úkol</span>
                 <span class="modal_close">&times;</span>
             </div>
-            <form class="add_task" id="modal_form" method="POST" action="/edit_task">
+            <form id="modal_form" method="POST" action="/edit_task">
                 <label>
-                    <textarea name="edited_task_content" rows="2" cols="70"
-                              id="modal_form_content" onkeyup="checkInputLength();"></textarea>
+                    <input name="edited_task_content" size="69" id="modal_form_content" onkeyup="checkInputLength();">
                 </label>
+                <br><br>
                 <button id="modal_submit_button" disabled>Upravit</button>
             </form>
         </div>
@@ -63,7 +63,7 @@
         "use strict";
 
         let newTaskContent, submitButton;
-        let modal, modalSpan, modalForm, modalFormContent, modalSubmitButton;
+        let modal, modalSpan, modalForm, modalFormContent, modalSubmitButton, modalHeaderText;
 
         document.addEventListener("DOMContentLoaded", () => {
             // Přidání nového úkolu
@@ -76,6 +76,7 @@
             modalForm = document.getElementById("modal_form");
             modalFormContent = document.getElementById("modal_form_content");
             modalSubmitButton = document.getElementById("modal_submit_button");
+            modalHeaderText = document.getElementById("modal_header_text");
             modalSpan.onclick = () => { // When the user clicks on <span> (x), close the modal
                 modal.style.display = "none";
             };
@@ -93,11 +94,21 @@
         };
 
         // Zobrazit modal pro editaci úkolu; nastavit odpovídající akci pro formulář; předvyplnit textarea
-        const openModal = (taskId, taskContent) => {
+        const openModal = (taskId, action, taskContent) => {
             modal.style.display = "block";
-            modalForm.action = `/edit_task/${taskId}`;
+            modalForm.action = `/${action}_task/${taskId}`;
             modalFormContent.value = taskContent;
             modalSubmitButton.disabled = false;
+
+            if (action === "edit") {
+                modalHeaderText.textContent = "Upravit úkol";
+                modalSubmitButton.textContent = "Upravit";
+                modalFormContent.disabled = false;
+            } else {
+                modalHeaderText.textContent = "Smazat úkol?";
+                modalSubmitButton.textContent = "Smazat";
+                modalFormContent.disabled = true;
+            }
         };
     </script>
 {% endblock %}
