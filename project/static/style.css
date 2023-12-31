@@ -15,6 +15,10 @@
     --color-tr-hover: #f2f2f2;
 
     --color-modal-border: #c5c5c5;
+
+    --color-select-font: #0151b3;
+    --color-select-border: #dddddd;
+    --color-select-background: #eeeeee;
 }
 
 body {
@@ -122,6 +126,45 @@ fieldset legend {
 
 .complete_task_form {
     display: inline;
+}
+
+form.radios {
+    border-bottom: 3px solid var(--color-thead-font);
+    display: flex;
+}
+.radios input {
+    display: none;
+}
+.radios label {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color-select-font);
+    background-color: var(--color-select-background);
+    text-decoration: underline;
+    padding: .3rem .5rem;
+    margin: 0 .1rem;
+
+    border-top: 2px solid var(--color-select-border);
+    border-left: 2px solid var(--color-select-border);
+    border-right: 2px solid var(--color-select-border);
+    border-radius: 4px 4px 0 0;
+}
+.radios label:hover {
+    cursor: pointer;
+    text-decoration: none;
+
+    border-top: 2px solid var(--color-thead-font);
+    border-left: 2px solid var(--color-thead-font);
+    border-right: 2px solid var(--color-thead-font);
+}
+.radios input:checked+label { /* https://stackoverflow.com/a/1431788/ */
+    text-decoration: none;
+    color: white;
+    background-color: var(--color-thead-font);
+
+    border-top: 2px solid var(--color-thead-font);
+    border-left: 2px solid var(--color-thead-font);
+    border-right: 2px solid var(--color-thead-font);
 }
 
 /* == MODAL == */

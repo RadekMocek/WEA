@@ -12,6 +12,17 @@
     </form>
     <fieldset>
         <legend>Moje úkoly</legend>
+        <form class="radios">
+            <input type="radio" id="all" name="task_type" value="all"
+                   onclick="taskFilter('all');" checked>
+            <label for="all">Všechny</label>
+            <input type="radio" id="completed" name="task_type" value="completed"
+                   onclick="taskFilter('completed');">
+            <label for="completed">Splněno</label>
+            <input type="radio" id="uncompleted" name="task_type" value="uncompleted"
+                   onclick="taskFilter('uncompleted');">
+            <label for="uncompleted">Nesplněno</label>
+        </form>
         <table id="tasks_table">
             <thead>
             <tr>
@@ -22,11 +33,12 @@
             </thead>
             <tbody>
             {% for task in user_tasks %}
-                <tr>
+                <tr class="{{ task.done }}">
                     <td>{{ task.content }}</td>
                     <td>
                         {% if task.done %}
-                            <img class="check" src="{{ url_for("static", filename="check.png") }}"
+                            <img class="check"
+                                 src="{{ url_for("static", filename="check.png") }}"
                                  alt="Indikátor splněného úkolu">
                         {% else %}
                             —
@@ -124,6 +136,22 @@
                 modalSubmitButton.textContent = "Smazat";
                 modalFormContent.disabled = true;
             }
+        };
+
+        // Zobrazit vše/splněno/nesplněno
+        const taskFilter = (type) => {
+            const completed = document.querySelectorAll(".True");
+            const uncompleted = document.querySelectorAll(".False");
+
+            const completedDisplay = type === "uncompleted" ? "none" : "default";
+            const uncompletedDisplay = type === "completed" ? "none" : "default";
+
+            completed.forEach(element => {
+                element.style = `display: ${completedDisplay}`;
+            });
+            uncompleted.forEach(element => {
+                element.style = `display: ${uncompletedDisplay}`;
+            });
         };
     </script>
 {% endblock %}
