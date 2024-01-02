@@ -1,4 +1,4 @@
-"""Modul pro inicializaci a spuštění FLask webové aplikace."""
+"""Modul pro inicializaci a spuštění Flask webové aplikace."""
 
 import pathlib
 import secrets
@@ -6,8 +6,10 @@ import secrets
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
+csrf = CSRFProtect()
 
 
 def create_app():
@@ -43,6 +45,9 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    # Obrana proti CSRF
+    csrf.init_app(app)
 
     # Blueprints umožňují rozdělení endpointů do více souborů
     # - Přihlášení / registrace / odhlášení

@@ -18,6 +18,7 @@
                 Heslo znovu:<br>
                 <input type="password" name="password_check">
             </label>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <br><br>
             <button type="submit">Registrovat se</button>
         </fieldset>

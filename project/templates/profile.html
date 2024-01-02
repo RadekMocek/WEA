@@ -8,6 +8,7 @@
             <label>
                 <input name="new_task_content" size="69" id="new_task_content" onkeyup="checkInputLength();">
             </label>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" id="submit_button" disabled>Přidat</button>
         </fieldset>
     </form>
@@ -50,6 +51,7 @@
                     </td>
                     <td>
                         <form class="complete_task_form" method="POST" action="/complete_task/{{ task.id }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit">Hotovo</button>
                         </form>
                         <button onclick="openModal({{ task.id }}, 'edit');">Upravit</button>
@@ -77,6 +79,7 @@
                 <label>
                     <input name="edited_task_content" size="69" id="modal_form_content" onkeyup="checkInputLength();">
                 </label>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <br><br>
                 <button type="submit" id="modal_submit_button" disabled>Upravit</button>
             </form>
