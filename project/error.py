@@ -1,3 +1,5 @@
+"""HTTP error handlers."""
+
 from flask import Blueprint, flash, redirect, url_for
 
 error = Blueprint("error", __name__)

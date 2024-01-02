@@ -40,6 +40,7 @@
     </nav>
 </header>
 
+{# Tato zpráva se zobrazí při použití funkce flash() #}
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         <div class="warning">
@@ -49,10 +50,12 @@
 {% endwith %}
 
 <main>
+    {# Zde podřízené šablony přidají statický obsah (HTML kód dané stránky) #}
     {% block content %}
     {% endblock %}
 </main>
 
+{#  Zde mohou podřízené šablony přidat JavaScript do <script></script> #}
 {% block javascript %}
 {% endblock %}
 

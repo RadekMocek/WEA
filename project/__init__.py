@@ -1,3 +1,8 @@
+"""Modul pro inicializaci a spuštění FLask webové aplikace."""
+
+import pathlib
+import secrets
+
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -6,18 +11,30 @@ db = SQLAlchemy()
 
 
 def create_app():
-    # Flask aplikace
+    """Inicializace Flask aplikace."""
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "secretbruh"  # TODO
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
+
+    # Secret key pro šifrování cookies atd.
+    flask_secret_key_path = pathlib.Path(".flask_secret_key")
+    try:  # Přečíst key ze (private) souboru
+        with flask_secret_key_path.open("r") as secret_file:
+            flask_secret_key = secret_file.read()
+    except FileNotFoundError:  # Pokud soubor neexistuje – vygenerovat, uložit a použít nový key
+        with flask_secret_key_path.open("w") as secret_file:
+            flask_secret_key = secrets.token_hex(32)
+            secret_file.write(flask_secret_key)
+    app.config["SECRET_KEY"] = flask_secret_key
+
+    # Jinja autoescaping by měl být automaticky zapnutý pro html soubory, pro jistotu ale zapneme pro všechno
     app.jinja_options["autoescape"] = lambda _: True
 
-    # Databáze
+    # SQLite databáze spravovaná SQLAlchemy pro uživatele a jejich úkoly
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
     db.init_app(app)
 
     # Login manager
     login_manager = LoginManager()
-    login_manager.login_view = "auth.login"
+    login_manager.login_view = "auth.login"  # Stránka pro přihlášení (modul auth.py funkce login)
     login_manager.login_message = "Tato akce vyžaduje přihlášení."
     login_manager.init_app(app)
 
@@ -25,20 +42,20 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        # return db.session.execute(db.select(User).filter_by(id=int(user_id))).one_or_none()  # ¯\_(ツ)_/¯
         return User.query.get(int(user_id))
 
-    # Blueprints
+    # Blueprints umožňují rozdělení endpointů do více souborů
+    # - Přihlášení / registrace / odhlášení
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
-
+    # - HTTP Error pages
     from .error import error as error_blueprint
     app.register_blueprint(error_blueprint)
-
+    # - Úkoly CRUD
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    # Databáze II
+    # Načtení / případné vytvoření databáze
     with app.app_context():
         db.create_all()
 

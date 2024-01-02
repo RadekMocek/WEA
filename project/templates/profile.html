@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form method="POST" action="/add_task">
+    {#  Formulář pro přidání nového úkolu #}
+    <form method="POST" action="/add_task" autocomplete="off">
         <fieldset>
             <legend>Přidat úkol</legend>
             <label>
@@ -10,8 +11,10 @@
             <button type="submit" id="submit_button" disabled>Přidat</button>
         </fieldset>
     </form>
+    {#  Výpis uživatelových úkolů #}
     <fieldset>
         <legend>Moje úkoly</legend>
+        {# Přepínání vše/splněno/nesplněno #}
         <form class="radios">
             <input type="radio" id="all" name="task_type" value="all"
                    onclick="taskFilter('all');" checked>
@@ -23,6 +26,7 @@
                    onclick="taskFilter('uncompleted');">
             <label for="uncompleted">Nesplněno</label>
         </form>
+        {# Tabulka s úkoly #}
         <table id="tasks_table">
             <thead>
             <tr>
@@ -62,14 +66,14 @@
         </table>
     </fieldset>
 
-    <!-- Modal -->
+    {# Modal #}
     <div id="modal" class="modal">
         <div class="modal_content">
             <div class="modal_header">
                 <span id="modal_header_text">Upravit úkol</span>
                 <span class="modal_close">&times;</span>
             </div>
-            <form id="modal_form" method="POST" action="/edit_task">
+            <form id="modal_form" method="POST" action="/edit_task" autocomplete="off">
                 <label>
                     <input name="edited_task_content" size="69" id="modal_form_content" onkeyup="checkInputLength();">
                 </label>
@@ -88,14 +92,14 @@
         let modal, modalSpan, modalForm, modalFormContent, modalSubmitButton, modalHeaderText;
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Přidání nového úkolu
+            // Pro přidání nového úkolu
             newTaskContent = document.getElementById("new_task_content");
             submitButton = document.getElementById("submit_button");
 
             // Pro předvyplnění inputu při editaci, dosazovat user content do onclick="" není ideální
             userTasks = {{ user_tasks|tojson }};
 
-            // Modal – Editace úkolu (https://www.w3schools.com/howto/howto_css_modals.asp)
+            // Pro modal editace/smazání úkolu (https://www.w3schools.com/howto/howto_css_modals.asp)
             modal = document.getElementById("modal"); // Get the modal
             modalSpan = document.getElementsByClassName("modal_close")[0]; // Get the <span> element that closes the modal
             modalForm = document.getElementById("modal_form");
